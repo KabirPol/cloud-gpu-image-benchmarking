@@ -18,8 +18,15 @@ This project evaluates the computational efficiency, resource utilization, and s
 - **Core Libraries:** PyTorch (Torchvision), NumPy, Matplotlib
 - **Infrastructure:** Google Colab (utilizing CPU vs. NVIDIA T4 Cloud GPUs)
 
-## 📊 Expected Deliverables
-The final submission will follow a structured journal/conference format containing:
-1. Complete Python/PyTorch benchmarking codebase hosted on GitHub.
-2. Comprehensive hardware profiling data tables (Execution Time, VRAM allocation, Peak GPU Usage).
-3. Scalability visualization graphs illustrating data throughput trends.
+## 📊 Project Deliverables
+- **Codebase:** A modular, well-documented Python/PyTorch benchmarking script hosted entirely in this GitHub repository.
+- **Experimental Data:** Structured hardware profiling datasets capturing precise execution times, VRAM allocation spikes, and peak resource utilization metrics.
+- **Visual Analytics:** Performance and scalability line graphs plotting image processing throughput against varying batch sizes using Matplotlib.
+- **Academic Report:** A comprehensive, publication-style technical paper detailing the project's methodology, empirical findings, and architectural conclusions.
+
+## 📖 Research & References
+*The following foundational literature and resources guide the benchmarking methodologies for this study:*
+
+1. **Kirk, D. B., Hwu, W. W., & El Hajj, I.** *Programming Massively Parallel Processors: A Hands-on Approach.* Morgan Kaufmann. (Chapters 1–2: Introduction to throughput-oriented GPU architectures and thread execution models).
+2. **NVIDIA Corporation.** *CUDA C++ Best Practices Guide.* (Sections on memory coalescing and optimization strategies for parallel streaming multiprocessors).
+3. **Paszke, A., et al.** *PyTorch: An Imperative Style, High-Performance Deep Learning Library.* (Foundational reference for orchestrating CUDA-accelerated batch operations without low-level C++ overhead).
