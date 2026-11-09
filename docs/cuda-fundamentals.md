@@ -149,8 +149,67 @@ The concepts learned through this experiment will be applied to:
 - CPU and GPU performance comparison.
 - Performance analysis of image-processing workloads.
 
-## 10. References
+## 10. GPU Memory Management and Data Transfers
 
-1. Numba Documentation: https://numba.readthedocs.io/
-2. Numba CUDA Documentation: https://numba.readthedocs.io/en/stable/cuda/
-3. NVIDIA CUDA C++ Programming Guide: https://docs.nvidia.com/cuda/cuda-c-programming-guide/
+GPU computing involves transferring data between CPU memory and GPU memory.
+
+### 10.1 Host Memory
+
+Host memory is the main system memory used by the CPU. In Python, NumPy arrays are normally stored in host memory.
+
+### 10.2 Device Memory
+
+Device memory is the memory available on the GPU. CUDA kernels access data stored in device memory during GPU execution.
+
+### 10.3 Host-to-Device Transfer
+
+Host-to-Device (H2D) transfer moves input data from CPU memory to GPU memory.
+
+In Numba CUDA, this can be performed using:
+
+`d_A = cuda.to_device(A)`
+
+Here, `A` is the original NumPy array and `d_A` is its copy in GPU memory.
+
+### 10.4 Device-to-Host Transfer
+
+Device-to-Host (D2H) transfer moves computed results from GPU memory back to CPU memory.
+
+In Numba CUDA, this can be performed using:
+
+`A = d_A.copy_to_host()`
+
+### 10.5 GPU Memory Allocation
+
+GPU memory must be allocated for data that will be processed by a CUDA kernel.
+
+Numba CUDA provides functions such as:
+
+- `cuda.to_device()` to transfer and allocate data on the GPU.
+- `cuda.device_array()` to allocate an array directly in GPU memory.
+- `copy_to_host()` to retrieve results from GPU memory.
+
+### 10.6 Importance of Memory Transfers
+
+Data transfers contribute to the overall execution time of a GPU application.
+
+For small workloads, memory-transfer overhead can be significant compared with kernel execution time.
+
+For larger workloads, the computational benefits of GPU parallelism may outweigh the transfer overhead.
+
+Therefore, GPU performance evaluation should consider:
+
+1. Host-to-Device transfer time.
+2. GPU kernel execution time.
+3. Device-to-Host transfer time.
+4. Total end-to-end execution time.
+
+### 10.7 Relevance to Sobel Edge Detection
+
+In our project, an input image will initially be stored as a NumPy array in CPU memory.
+
+The image will be transferred to GPU memory, where the Sobel CUDA kernel will calculate horizontal and vertical gradients.
+
+The resulting edge image will then be transferred back to CPU memory for visualization and evaluation.
+
+Measuring these individual stages will help us understand the performance benefits and overheads of GPU-based image processing.
