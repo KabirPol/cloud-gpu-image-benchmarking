@@ -32,37 +32,36 @@ Sobel edge detection is selected as the primary workload. It computes horizontal
 
 The Sobel filters are:
 
-\[
-S_x =
-\begin{bmatrix}
--1 & 0 & 1 \\
--2 & 0 & 2 \\
--1 & 0 & 1
-\end{bmatrix}
-\qquad
-S_y =
-\begin{bmatrix}
--1 & -2 & -1 \\
-0 & 0 & 0 \\
-1 & 2 & 1
-\end{bmatrix}
-\]
+**Horizontal filter (Sx):**
 
-For an input image \(I\), the gradients are:
+```text
+-1   0   1
+-2   0   2
+-1   0   1
+```
 
-\[
-G_x = I * S_x
-\]
+**Vertical filter (Sy):**
 
-\[
-G_y = I * S_y
-\]
+```text
+-1  -2  -1
+ 0   0   0
+ 1   2   1
+```
 
-where \(*\) denotes convolution. The gradient magnitude is calculated as:
+For an input image I, the horizontal and vertical gradients are calculated as:
 
-\[
-G = \sqrt{G_x^2 + G_y^2}
-\]
+```text
+Gx = I * Sx
+Gy = I * Sy
+```
+
+Here, `*` denotes the convolution operation.
+
+The gradient magnitude is calculated as:
+
+```text
+G = sqrt(Gx² + Gy²)
+```
 
 The output represents the strength of edges in the image.
 
