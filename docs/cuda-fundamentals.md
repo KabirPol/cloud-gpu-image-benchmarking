@@ -1,4 +1,3 @@
-
 # CUDA Fundamentals Using Python
 
 ## 1. Introduction
@@ -91,8 +90,6 @@ For vector operations, this index identifies which array element a thread should
 
 ## 7. Thread and Block Configuration
 
-
-
 The number of threads per block determines how many threads are grouped in each block.
 
 The number of blocks required for a one-dimensional array can be calculated as:
@@ -113,7 +110,7 @@ For `N = 300` elements and `T = 128` threads per block:
 
 `Blocks = 427 // 128 = 3`
 
-
+If the number of elements is not an exact multiple of the threads per block, some threads in the final block may not correspond to valid array elements. Therefore, CUDA kernels should include a boundary check to prevent invalid memory access.
 
 ## 8. Vector Addition as a Basic GPU Workload
 
@@ -137,9 +134,11 @@ C[i]=A[i]+B[i]
 
 Each output element can be calculated independently, making this operation suitable for parallel execution.
 
+In the CUDA implementation, each thread calculates one output element using its global thread index. This allows multiple elements of the output vector to be calculated concurrently.
+
 ## 9. Relevance to the Project
 
-Vector addition provides an introductory understanding of GPU programming before implementing the selected image-processing workload: Sobel edge detection.
+Vector addition provides an introductory understanding of GPU programming before implementing the computational workloads selected for this project.
 
 The concepts learned through this experiment will be applied to:
 
@@ -147,7 +146,7 @@ The concepts learned through this experiment will be applied to:
 - Parallel execution.
 - GPU memory management.
 - CPU and GPU performance comparison.
-- Performance analysis of image-processing workloads.
+- Performance analysis of image-processing and machine learning workloads.
 
 ## 10. GPU Memory Management and Data Transfers
 
@@ -177,7 +176,9 @@ Device-to-Host (D2H) transfer moves computed results from GPU memory back to CPU
 
 In Numba CUDA, this can be performed using:
 
-`A = d_A.copy_to_host()`
+`C = d_C.copy_to_host()`
+
+Here, `d_C` is the output array in GPU memory and `C` is the resulting NumPy array in CPU memory.
 
 ### 10.5 GPU Memory Allocation
 
@@ -204,12 +205,21 @@ Therefore, GPU performance evaluation should consider:
 3. Device-to-Host transfer time.
 4. Total end-to-end execution time.
 
-### 10.7 Relevance to Sobel Edge Detection
+### 10.7 Relevance to Project Workloads
 
-In our project, an input image will initially be stored as a NumPy array in CPU memory.
+In this project, different computational workloads will be executed on the GPU to study their performance, resource utilization and scalability.
 
-The image will be transferred to GPU memory, where the Sobel CUDA kernel will calculate horizontal and vertical gradients.
+The input data, such as images or training data, will initially be stored in CPU memory and transferred to GPU memory for computation.
 
-The resulting edge image will then be transferred back to CPU memory for visualization and evaluation.
+The selected workloads include:
 
-Measuring these individual stages will help us understand the performance benefits and overheads of GPU-based image processing.
+- **Sobel edge detection:** Calculates horizontal and vertical image gradients to identify edges.
+- **Gaussian blur:** Applies a Gaussian filter to smooth images.
+- **Histogram equalization:** Enhances image contrast by redistributing pixel intensity values.
+- **Machine learning application:** Uses GPU acceleration for model training and image classification.
+
+Depending on the workload, CUDA kernels or GPU-accelerated machine learning frameworks will perform the computations.
+
+The resulting outputs will be transferred back to CPU memory when required for evaluation and visualization.
+
+Measuring data-transfer time, computation time and overall execution time will help us understand the performance characteristics and overheads of different GPU workloads.
