@@ -115,6 +115,32 @@ Both implementations produced matching outputs.
 | Mean GPU Memory Usage | 328.43 MB |
 | Mean Power Consumption | 29.26 W |
 
+### Performance Figures
+
+**Real Image: CPU and GPU Output Comparison**
+
+![Sobel Real Image Comparison](figures/sobel_real_image_comparison.png)
+
+**CPU vs GPU Kernel Execution Time**
+
+![Sobel CPU vs GPU Kernel Time](figures/sobel_cpu_vs_gpu_kernel.png)
+
+**CPU vs GPU End-to-End Execution Time**
+
+![Sobel CPU vs GPU End-to-End Time](figures/sobel_cpu_vs_gpu_end_to_end.png)
+
+**GPU Speedup Comparison**
+
+![Sobel GPU Speedup Comparison](figures/sobel_gpu_speedup_comparison.png)
+
+**GPU Utilization Monitoring**
+
+![Sobel GPU Utilization](figures/sobel_gpu_utilization_monitoring.png)
+
+**GPU Memory Monitoring**
+
+![Sobel GPU Memory](figures/sobel_gpu_memory_monitoring.png)
+
 ## 4. Gaussian Blur Results
 
 Gaussian blur applies a 5 × 5 Gaussian filter to smooth image details and reduce noise.
@@ -159,6 +185,32 @@ The 8 × 8 configuration achieved the lowest measured execution time among the t
 | GPU Utilization Standard Deviation | 12.33% |
 | GPU Memory Standard Deviation | 35.12 MB |
 | Power Standard Deviation | 1.99 W |
+
+### Performance Figures
+
+**Real Image: CPU and GPU Output Comparison**
+
+![Gaussian Blur Real Image Comparison](figures/gaussian_real_image_comparison.png)
+
+**CPU vs GPU Kernel Execution Time**
+
+![Gaussian CPU vs GPU Kernel Time](figures/gaussian_cpu_vs_gpu_kernel.png)
+
+**CPU vs GPU End-to-End Execution Time**
+
+![Gaussian CPU vs GPU End-to-End Time](figures/gaussian_cpu_vs_gpu_end_to_end.png)
+
+**GPU Speedup Comparison**
+
+![Gaussian GPU Speedup Comparison](figures/gaussian_speedup_comparison.png)
+
+**GPU Utilization Monitoring**
+
+![Gaussian GPU Utilization](figures/gaussian_gpu_utilization_monitoring.png)
+
+**GPU Memory Monitoring**
+
+![Gaussian GPU Memory](figures/gaussian_gpu_memory_monitoring.png)
 
 ## 5. Histogram Equalization Results
 
@@ -208,13 +260,43 @@ The 8 × 8 configuration achieved the lowest measured execution time among the t
 
 The resource monitoring interval was relatively short and produced only four samples. Therefore, these measurements should be treated as indicative observations rather than comprehensive sustained-utilization statistics.
 
+### Performance Figures
+
+**Real Image: CPU and GPU Output Comparison**
+
+![Histogram Equalization Real Image Comparison](figures/histogram_equalization_real_image_comparison.png)
+
+**Image Histogram Comparison**
+
+![Histogram Equalization Histograms](figures/histogram_equalization_histograms.png)
+
+**CPU vs GPU Kernel Execution Time**
+
+![Histogram Equalization CPU vs GPU Kernel Time](figures/histogram_equalization_cpu_vs_gpu_kernel.png)
+
+**CPU vs GPU End-to-End Execution Time**
+
+![Histogram Equalization CPU vs GPU End-to-End Time](figures/histogram_equalization_cpu_vs_gpu_end_to_end.png)
+
+**GPU Speedup Comparison**
+
+![Histogram Equalization GPU Speedup](figures/histogram_equalization_gpu_speedup_comparison.png)
+
+**GPU Utilization Monitoring**
+
+![Histogram Equalization GPU Utilization](figures/histogram_equalization_gpu_utilization.png)
+
+**GPU Memory Monitoring**
+
+![Histogram Equalization GPU Memory](figures/histogram_equalization_gpu_memory.png)
+
 ## 6. Comparative Analysis of Image-Processing Workloads
 
 ### 6.1 Performance Comparison at 2048 × 2048
 
 | Workload | CPU Time (ms) | GPU Kernel (ms) | GPU End-to-End (ms) | Kernel Speedup | End-to-End Speedup |
 |---|---:|---:|---:|---:|---:|
-| Sobel | 118.4407 | 3.2279 | 11.6378 | 36.69× | 10.18× |
+| Sobel Edge Detection | 118.4407 | 3.2279 | 11.6378 | 36.69× | 10.18× |
 | Gaussian Blur | 274.2748 | 4.5730 | 10.4879 | 59.98× | 26.15× |
 | Histogram Equalization | 4.9937 | 3.0652 | 5.5428 | 1.63× | 0.90× |
 
@@ -233,6 +315,25 @@ The experiments demonstrate that GPU acceleration is particularly beneficial for
 Histogram equalization exhibits a different performance pattern because its multi-stage processing pipeline introduces additional execution overhead.
 
 Therefore, selecting a GPU implementation should consider complete execution time rather than kernel execution time alone.
+
+### 6.4 Comparative GPU Resource Utilization
+
+The following table summarizes the GPU resource measurements collected during repeated execution of each workload at a resolution of 2048 × 2048.
+
+| Workload | Mean GPU Utilization (%) | GPU Memory Usage (MB) | Mean GPU Power (W) |
+|---|---:|---:|---:|
+| Sobel Edge Detection | 27.07 | 328.43 | 29.26 |
+| Gaussian Blur | 38.55 | 209.36 | 31.94 |
+| Histogram Equalization | 29.50 | 132.00 | 37.86 |
+
+### 6.5 Resource Utilization Observations
+
+- Gaussian blur recorded the highest mean GPU utilization among the three workloads.
+- Sobel edge detection recorded the highest GPU memory usage during monitoring.
+- Histogram equalization recorded the highest mean GPU power reading.
+- Resource utilization varies with the computational characteristics and execution behavior of each workload.
+
+These measurements provide additional insight into how different image-processing workloads use GPU resources beyond execution time alone.
 
 ## 7. Correctness Verification
 
@@ -256,6 +357,9 @@ The following limitations should be considered when interpreting the experimenta
 4. Histogram equalization resource monitoring produced only four samples, limiting the reliability of sustained-utilization conclusions.
 5. The experiments use a limited set of image-processing operations and resolutions.
 6. The results represent a single NVIDIA Tesla T4 configuration and should not be generalized to all GPU architectures.
+7. GPU resource utilization and power consumption were monitored through periodic sampling during workload execution. These measurements represent observed values and may vary depending on GPU state, background activity, and monitoring intervals.
+8. Power consumption measurements represent GPU power readings rather than total system energy consumption.
+9. The histogram equalization resource-monitoring experiment had a limited number of monitoring samples. Therefore, its resource measurements should be interpreted as indicative rather than comprehensive sustained-utilization measurements.
 
 ## 9. Conclusion
 
@@ -265,4 +369,4 @@ Sobel edge detection and Gaussian blur achieved substantial GPU speedups, partic
 
 The results emphasize the importance of evaluating kernel execution, memory transfer overhead, end-to-end execution time, and GPU resource utilization together when analyzing GPU workload performance and scalability.
 
-Further work will focus on Docker-based GPU deployment, reproducibility, and final consolidated project evaluation.
+The resource-utilization experiments further demonstrate that GPU workloads differ in their utilization of computational resources, memory, and power. These observations highlight the importance of evaluating GPU applications using multiple performance and resource metrics rather than execution time alone.
