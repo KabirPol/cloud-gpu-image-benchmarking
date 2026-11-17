@@ -118,19 +118,22 @@ Vector addition is a simple parallel computing operation.
 
 Given two input vectors:
 
-\[
-A=[a_1,a_2,\ldots,a_n]
-\]
+**A = [a₁, a₂, ..., aₙ]**
 
-\[
-B=[b_1,b_2,\ldots,b_n]
-\]
+**B = [b₁, b₂, ..., bₙ]**
 
-The output vector is:
+The output vector is obtained by adding the corresponding elements of the two input vectors:
 
-\[
-C[i]=A[i]+B[i]
-\]
+**C[i] = A[i] + B[i]**
+
+For example:
+
+```text
+A = [1, 2, 3, 4]
+B = [5, 6, 7, 8]
+
+C = [6, 8, 10, 12]
+```
 
 Each output element can be calculated independently, making this operation suitable for parallel execution.
 
