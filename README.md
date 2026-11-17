@@ -8,15 +8,17 @@
 | **Domain** | GPU Computing and Image Processing |
 | **Primary Workloads** | Sobel Edge Detection, Gaussian Blur, Histogram Equalization |
 | **Machine Learning Application** | CNN-based Image Classification using CIFAR-10 |
-| **Cloud Platform** | Google Colab |
-| **GPU** | NVIDIA Tesla T4 |
+| **Primary Platform** | Google Colab |
+| **Primary GPU** | NVIDIA Tesla T4 |
+| **Additional Validation Platform** | Docker Desktop |
+| **Additional Validation GPU** | NVIDIA GeForce GTX 1080 |
 | **Programming Language** | Python |
 | **GPU Programming** | Numba CUDA |
 | **Deep Learning Framework** | PyTorch |
 
 ## Project Overview
 
-This project investigates the performance, resource utilization, and scalability of computationally intensive workloads executed on cloud-based GPU infrastructure.
+This project investigates the performance, resource utilization, and scalability of computationally intensive workloads executed on GPU infrastructure.
 
 The primary focus is on evaluating GPU acceleration for image-processing operations using NVIDIA CUDA through Numba. Three image-processing workloads are implemented and analyzed:
 
@@ -28,7 +30,7 @@ Each workload is implemented using both CPU and GPU approaches. Their performanc
 
 In addition to image processing, a Convolutional Neural Network (CNN) is implemented using PyTorch and trained on the CIFAR-10 dataset. This provides a machine learning application to demonstrate GPU utilization for deep learning workloads.
 
-The experiments are conducted using an NVIDIA Tesla T4 GPU through Google Colab.
+The primary experiments are conducted using an NVIDIA Tesla T4 GPU through Google Colab. Additional Docker-based validation is performed on an NVIDIA GeForce GTX 1080 GPU to examine the correctness and portability of the CUDA workloads across different GPU architectures and execution environments.
 
 ## Key Objectives
 
@@ -44,9 +46,11 @@ The experiments are conducted using an NVIDIA Tesla T4 GPU through Google Colab.
 
 6. **Scalability Analysis:** Study how execution performance changes with increasing image resolutions and workload sizes.
 
-7. **Machine Learning Application:** Implement and evaluate a CNN-based image classification workload using PyTorch on a cloud GPU.
+7. **Machine Learning Application:** Implement and evaluate a CNN-based image classification workload using PyTorch on a GPU.
 
-8. **Deployment and Reproducibility:** Explore Docker-based containerization to support reproducible GPU workload execution.
+8. **Deployment and Reproducibility:** Explore Docker-based containerization to support reproducible GPU workload execution across compatible NVIDIA GPU systems.
+
+9. **Cross-GPU Validation:** Verify the correctness of CUDA implementations on a second GPU environment using Docker.
 
 ## Workloads and Experimental Methodology
 
@@ -103,6 +107,8 @@ The experiment evaluates:
 
 ## Experimental Environment
 
+### 1. Primary Benchmarking Environment: Google Colab
+
 The primary image-processing experiments were conducted using the following environment:
 
 | Component | Configuration |
@@ -122,9 +128,80 @@ The primary image-processing experiments were conducted using the following envi
 
 The actual software versions and hardware availability may vary across cloud runtime sessions.
 
+### 2. Docker-Based Validation Environment: NVIDIA GTX 1080
+
+An additional validation environment was configured using Docker Desktop on a Windows 10 system with an NVIDIA GeForce GTX 1080 GPU.
+
+| Component | Configuration |
+|---|---|
+| Host Operating System | Windows 10 |
+| Container Platform | Docker Desktop 4.99.0 |
+| Container Operating System | Ubuntu 22.04 |
+| GPU | NVIDIA GeForce GTX 1080 |
+| GPU Memory | 8 GB |
+| GPU Architecture | Pascal |
+| Compute Capability | 6.1 |
+| NVIDIA Driver | 582.53 |
+| CUDA Toolkit | 12.6 |
+| Base Docker Image | nvidia/cuda:12.6.3-devel-ubuntu22.04 |
+| Python | Python 3.10 |
+| GPU Programming | Numba CUDA |
+| Numerical Computing | NumPy |
+
+Docker GPU passthrough was verified successfully using NVIDIA's container runtime support. The GTX 1080 was detected inside the container, and CUDA availability was confirmed through Numba.
+
+The Docker environment was used for additional correctness validation of all three image-processing workloads and preliminary timing observations. It was not intended to replace the primary Colab benchmarking environment.
+
+## Docker-Based Cross-GPU Validation
+
+The CUDA implementations were additionally executed inside a Docker container using an NVIDIA GTX 1080 GPU.
+
+The purpose of this validation was to verify that the image-processing implementations could execute correctly in a separate containerized environment with a different GPU architecture.
+
+The validation included:
+
+- Docker image creation using an NVIDIA CUDA development base image.
+- NVIDIA GPU passthrough verification.
+- CUDA toolkit and Numba CUDA availability checks.
+- Execution of the Sobel edge detection implementation.
+- Execution of the Gaussian blur implementation.
+- Execution of the histogram equalization implementation.
+- CPU-GPU output comparison for correctness verification.
+- Preliminary timing observations for the GPU implementations.
+
+### Correctness Validation
+
+All three image-processing workloads successfully passed the correctness checks on the GTX 1080.
+
+| Workload | Validation Input | Resolution | Maximum Absolute Difference | Status |
+|---|---|---:|---:|---|
+| Sobel Edge Detection | Real Image | 512 × 512 | 0.0 | Passed |
+| Sobel Baseline vs Shared Memory | Random Image | 2048 × 2048 | 0.0 | Passed |
+| Gaussian Blur | Real Image | 512 × 512 | 0.0 | Passed |
+| Gaussian Blur | Random Image | 2048 × 2048 | 0.0 | Passed |
+| Histogram Equalization | Real Image | 512 × 512 | 0 | Passed |
+| Histogram Equalization | Random Image | 2048 × 2048 | 0 | Passed |
+
+### Preliminary Timing Observations
+
+The following timing measurements were obtained during the GTX 1080 validation:
+
+| Workload | Measurement | Execution Time |
+|---|---|---:|
+| Sobel Baseline | Average GPU kernel time (30 runs) | 1.0721 ms |
+| Sobel Shared Memory | Average GPU kernel time (30 runs) | 1.2317 ms |
+| Gaussian Blur | Single GPU end-to-end measurement | 59.0239 ms |
+| Histogram Equalization | Single GPU end-to-end measurement | 10.3237 ms |
+
+For the Sobel workload, the shared-memory implementation was approximately 0.87× as fast as the baseline implementation in this preliminary GTX 1080 measurement.
+
+The Gaussian blur and histogram equalization timings represent single end-to-end measurements, including their respective execution overheads.
+
+**Note:** These GTX 1080 measurements are preliminary validation observations. They should not be directly compared with the repeated Colab T4 benchmark measurements because the measurement procedures and execution environments differ. A complete GTX 1080 performance, scalability, and resource-utilization study was not conducted.
+
 ## Performance Evaluation
 
-The workloads are evaluated using the following performance metrics:
+The primary Colab T4 workloads are evaluated using the following performance metrics:
 
 | Metric | Purpose |
 |---|---|
@@ -141,10 +218,12 @@ The workloads are evaluated using the following performance metrics:
 
 Image resolutions of 256 × 256, 512 × 512, 1024 × 1024, and 2048 × 2048 are used for the primary performance comparisons.
 
+The Colab T4 environment is used for the main performance, scalability, optimization, and resource-utilization analysis. The GTX 1080 environment provides additional cross-GPU correctness validation and preliminary timing observations.
+
 ## Repository Structure
 
 ```text
-cloud-gpu-workload-analysis/
+cloud-gpu-image-benchmarking/
 │
 ├── README.md
 │
@@ -165,7 +244,11 @@ cloud-gpu-workload-analysis/
 │   └── gpu_ml_application.ipynb
 │
 └── results/
-    └── figures/
+    ├── figures/
+    │
+    └── docker-gtx1080/
+        ├── correctness-results.md
+        └── validation-summary.csv
 ```
 
 ## Project Deliverables
@@ -176,14 +259,21 @@ cloud-gpu-workload-analysis/
 - **Performance Analysis:** Comparative evaluation of CPU and GPU execution times, speedups, memory transfers, and thread-block configurations.
 - **Resource Profiling:** GPU utilization, memory consumption, and power measurements.
 - **Visual Analytics:** Graphs illustrating workload performance and resource utilization.
-- **Deployment Documentation:** Cloud execution and reproducibility instructions, with Docker-based GPU containerization being explored.
+- **Docker Validation:** Containerized execution and cross-GPU correctness validation using an NVIDIA GTX 1080.
+- **Deployment Documentation:** Cloud execution, Docker configuration, GPU passthrough, and reproducibility instructions.
 - **Academic Report:** A technical report documenting the methodology, experimental findings, limitations, and conclusions.
 
 ## Deployment and Reproducibility
 
-The GPU workloads have been executed using Google Colab with an NVIDIA Tesla T4 GPU.
+The project uses two separate GPU execution environments.
 
-Docker-based containerization is the next deployment stage. The objective is to package the required software dependencies and execute CUDA-based workloads inside a container on a compatible NVIDIA GPU system.
+**Google Colab:** The primary benchmarking environment, using an NVIDIA Tesla T4 GPU for image-processing performance evaluation, scalability experiments, optimization analysis, and resource monitoring.
+
+**Docker:** An additional containerized environment configured with an NVIDIA GTX 1080 GPU. Docker GPU passthrough was verified, and all three image-processing workloads were successfully executed and checked for correctness.
+
+The Docker environment used the NVIDIA CUDA 12.6 development image with Ubuntu 22.04 and Numba CUDA.
+
+The Docker validation demonstrates the ability to execute the CUDA workloads in a separate containerized GPU environment. However, the primary performance conclusions are based on the Colab T4 experiments.
 
 Refer to [`docs/cloud-deployment.md`](docs/cloud-deployment.md) for environment setup, workload execution, and deployment documentation.
 
@@ -204,5 +294,3 @@ Refer to [`docs/cloud-deployment.md`](docs/cloud-deployment.md) for environment 
 7. Gonzalez, R. C., & Woods, R. E. *Digital Image Processing.* Pearson.
 
 8. Szeliski, R. *Computer Vision: Algorithms and Applications.* Springer.
-
----
