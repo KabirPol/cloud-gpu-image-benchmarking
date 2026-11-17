@@ -48,7 +48,7 @@ The primary experiments are conducted using an NVIDIA Tesla T4 GPU through Googl
 
 7. **Machine Learning Application:** Implement and evaluate a CNN-based image classification workload using PyTorch on a GPU.
 
-8. **Deployment and Reproducibility:** Explore Docker-based containerization to support reproducible GPU workload execution across compatible NVIDIA GPU systems.
+8. **Deployment and Reproducibility:** Implement Docker-based containerization to support reproducible GPU workload execution across compatible NVIDIA GPU systems.
 
 9. **Cross-GPU Validation:** Verify the correctness of CUDA implementations on a second GPU environment using Docker.
 
@@ -193,7 +193,7 @@ The following timing measurements were obtained during the GTX 1080 validation:
 | Gaussian Blur | Single GPU end-to-end measurement | 59.0239 ms |
 | Histogram Equalization | Single GPU end-to-end measurement | 10.3237 ms |
 
-For the Sobel workload, the shared-memory implementation was approximately 0.87× as fast as the baseline implementation in this preliminary GTX 1080 measurement.
+For the Sobel workload, the shared-memory implementation achieved a speedup of approximately 0.87× relative to the baseline, indicating that it was slower in this particular preliminary GTX 1080 measurement.
 
 The Gaussian blur and histogram equalization timings represent single end-to-end measurements, including their respective execution overheads.
 
@@ -231,6 +231,9 @@ cloud-gpu-image-benchmarking/
 │   ├── problem-formulation.md
 │   ├── literature-review.md
 │   └── workload-selection.md
+│
+├── docker/
+│   └── Dockerfile
 │
 ├── docs/
 │   ├── cuda-fundamentals.md
@@ -275,7 +278,7 @@ The Docker environment used the NVIDIA CUDA 12.6 development image with Ubuntu 2
 
 The Docker validation demonstrates the ability to execute the CUDA workloads in a separate containerized GPU environment. However, the primary performance conclusions are based on the Colab T4 experiments.
 
-Refer to [`docs/cloud-deployment.md`](docs/cloud-deployment.md) for environment setup, workload execution, and deployment documentation.
+The Docker configuration is maintained in [`docker/Dockerfile`](docker/Dockerfile), while the complete deployment and execution procedure is documented in [`docs/cloud-deployment.md`](docs/cloud-deployment.md).
 
 ## Research and References
 
