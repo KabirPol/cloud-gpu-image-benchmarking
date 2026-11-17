@@ -190,38 +190,27 @@ CUDA 12.6 was selected for the container environment to support the GTX 1080 GPU
 
 ### 7.3 Dockerfile Configuration
 
-A Dockerfile was created using an NVIDIA CUDA development image.
+The Docker environment is defined using a Dockerfile based on the NVIDIA CUDA 12.6 development image.
 
-The configuration was:
+The configuration installs:
+- Python 3
+- Numba CUDA with CUDA 12 support
+- NumPy
+- Pandas
+- Matplotlib
+- Scikit-image
+- IPython
 
-```dockerfile
-FROM nvidia/cuda:12.6.3-devel-ubuntu22.04
+The complete Docker configuration is maintained in [`docker/Dockerfile`](../docker/Dockerfile).
 
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PYTHONUNBUFFERED=1
-
-RUN apt-get update && apt-get install -y \
-    python3 python3-pip python3-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN python3 -m pip install --no-cache-dir \
-    "numba-cuda[cu12]" numpy pandas matplotlib scikit-image ipython
-
-WORKDIR /workspace
-
-CMD ["bash"]
-```
-
-This configuration installs the Python environment and the libraries required to execute the CUDA-based image-processing workloads.
-
-The CUDA development image provides the CUDA toolkit and compiler tools required for the container environment.
+This file can be used to recreate the container environment on a compatible NVIDIA GPU system.
 
 ### 7.4 Building the Docker Image
 
 The Docker image was built using:
 
 ```cmd
-docker build -t gpu-image-benchmark .
+docker build -t gpu-image-benchmark -f docker/Dockerfile .
 ```
 
 The image was created successfully using the NVIDIA CUDA 12.6 development base image.
