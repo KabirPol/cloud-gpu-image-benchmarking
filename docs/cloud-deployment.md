@@ -298,7 +298,7 @@ Preliminary timing measurements were also collected during the Docker validation
 | Gaussian Blur | Single GPU end-to-end measurement | 59.0239 ms |
 | Histogram Equalization | Single GPU end-to-end measurement | 10.3237 ms |
 
-The Sobel baseline and shared-memory implementations were measured using repeated kernel execution. The shared-memory implementation was approximately 0.87× as fast as the baseline in this preliminary measurement.
+The Sobel baseline and shared-memory implementations were measured using repeated kernel execution. The shared-memory implementation achieved a speedup of approximately 0.87× relative to the baseline, indicating that it was slower in this particular preliminary measurement.
 
 The Gaussian blur and histogram equalization values are single end-to-end measurements.
 
@@ -340,8 +340,8 @@ The Docker-based validation environment can be recreated on a compatible NVIDIA 
 1. Install Docker Desktop or an equivalent Docker environment.
 2. Configure NVIDIA GPU access through the appropriate container runtime.
 3. Ensure that the NVIDIA driver supports the selected CUDA container.
-4. Place the Dockerfile in the build directory.
-5. Build the Docker image.
+4. Ensure that the project repository contains the Dockerfile at `docker/Dockerfile`.
+5. Build the Docker image from the repository root using the Dockerfile at `docker/Dockerfile`.
 6. Start the container with GPU access enabled.
 7. Verify CUDA availability using Numba.
 8. Execute the required CUDA workloads.
