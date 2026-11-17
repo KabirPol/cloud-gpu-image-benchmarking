@@ -1,0 +1,11 @@
+Workload,Input,Resolution,Metric,Value,Correctness Status,Notes
+Sobel Edge Detection,Real Image,512x512,Maximum Absolute Difference,0.0,Passed,CPU-GPU output comparison
+Sobel Baseline,Random Image,2048x2048,GPU Kernel Average (ms),1.0721,Passed,Repeated kernel benchmark with 30 runs
+Sobel Shared Memory,Random Image,2048x2048,GPU Kernel Average (ms),1.2317,Passed,Repeated kernel benchmark with 30 runs
+Sobel Baseline vs Shared Memory,Random Image,2048x2048,Maximum Absolute Difference,0.0,Passed,Outputs identical
+Gaussian Blur,Real Image,512x512,Maximum Absolute Difference,0.0,Passed,CPU-GPU output comparison
+Gaussian Blur,Random Image,2048x2048,Maximum Absolute Difference,0.0,Passed,CPU-GPU output comparison
+Gaussian Blur,Random Image,2048x2048,Single GPU End-to-End Time (ms),59.0239,Passed,Single validation measurement
+Histogram Equalization,Real Image,512x512,Maximum Absolute Difference,0,Passed,Exact CPU-GPU output comparison
+Histogram Equalization,Random Image,2048x2048,Maximum Absolute Difference,0,Passed,Exact CPU-GPU output comparison
+Histogram Equalization,Random Image,2048x2048,Single GPU End-to-End Time (ms),10.3237,Passed,Single validation measurement
