@@ -100,7 +100,7 @@ Sobel edge detection is selected as the primary workload. Gaussian blur and hist
 
 The workloads are implemented using Python, NumPy, and CUDA through Numba. Google Colab with an NVIDIA Tesla T4 GPU is used as the cloud-based execution environment.
 
-The experiments compare CPU and GPU execution across different image resolutions. Performance is evaluated using execution time, kernel speedup, and end-to-end speedup. Different GPU thread-block configurations are also examined for the Sobel workload.
+The experiments compare CPU and GPU execution across different image resolutions. Performance is evaluated using execution time, kernel speedup, and end-to-end speedup. Different GPU thread-block configurations are also evaluated across the three image-processing workloads.
 
 GPU utilization, memory consumption, and power usage are monitored to understand resource requirements during execution. The project further considers cloud deployment, containerization, and scalability as part of evaluating the practical use of cloud-based GPU workloads.
 
