@@ -28,35 +28,27 @@ The primary focus is on evaluating GPU acceleration for image-processing operati
 
 Each workload is implemented using both CPU and GPU approaches. Their performance is evaluated across different image resolutions to understand how workload size influences GPU acceleration and execution overhead.
 
-In addition to image processing, a Convolutional Neural Network (CNN) is implemented using PyTorch and trained on the CIFAR-10 dataset. This provides a machine learning application to demonstrate GPU utilization for deep learning workloads.
+In addition to image processing, a Convolutional Neural Network (CNN) is implemented using PyTorch and trained on the CIFAR-10 dataset. This provides a supplementary machine learning application to demonstrate GPU utilization for deep learning workloads.
 
 The primary experiments are conducted using an NVIDIA Tesla T4 GPU through Google Colab. Additional Docker-based validation is performed on an NVIDIA GeForce GTX 1080 GPU to examine the correctness and portability of the CUDA workloads across different GPU architectures and execution environments.
 
 ## Key Objectives
 
 1. **GPU Workload Implementation:** Develop CPU and CUDA-based GPU implementations of computationally intensive image-processing operations.
-
 2. **Performance Analysis:** Compare CPU execution time, GPU kernel execution time, and GPU end-to-end execution time across different image resolutions.
-
 3. **Memory Transfer Analysis:** Evaluate Host-to-Device (H2D) and Device-to-Host (D2H) data transfer overhead.
-
 4. **GPU Optimization:** Investigate thread-block configurations and shared-memory optimization to understand their impact on execution performance.
-
 5. **Resource Utilization:** Monitor GPU utilization, memory consumption, and power usage during workload execution.
-
 6. **Scalability Analysis:** Study how execution performance changes with increasing image resolutions and workload sizes.
-
 7. **Machine Learning Application:** Implement and evaluate a CNN-based image classification workload using PyTorch on a GPU.
-
 8. **Deployment and Reproducibility:** Implement Docker-based containerization to support reproducible GPU workload execution across compatible NVIDIA GPU systems.
-
 9. **Cross-GPU Validation:** Verify the correctness of CUDA implementations on a second GPU environment using Docker.
 
 ## Workloads and Experimental Methodology
 
 ### 1. Sobel Edge Detection
 
-The Sobel operator is used to calculate horizontal and vertical image intensity gradients for edge detection.
+The Sobel operator calculates horizontal and vertical image intensity gradients for edge detection.
 
 The experiment includes:
 
@@ -104,6 +96,8 @@ The experiment evaluates:
 - Training loss across epochs.
 - Training execution time.
 - Classification accuracy on the test dataset.
+
+The supplementary CNN experiment achieved **66.87% test accuracy after five epochs**, with a total training time of **38.71 seconds**.
 
 ## Experimental Environment
 
@@ -220,6 +214,16 @@ Image resolutions of 256 × 256, 512 × 512, 1024 × 1024, and 2048 × 2048 are 
 
 The Colab T4 environment is used for the main performance, scalability, optimization, and resource-utilization analysis. The GTX 1080 environment provides additional cross-GPU correctness validation and preliminary timing observations.
 
+### Key Performance Findings
+
+- Sobel edge detection and Gaussian blur demonstrated substantial end-to-end GPU acceleration at larger image resolutions.
+- Gaussian blur achieved an end-to-end speedup of approximately 26.15× at 2048 × 2048.
+- Sobel edge detection achieved an end-to-end speedup of approximately 10.18× at 2048 × 2048.
+- Histogram equalization showed a different performance pattern. Although its GPU kernel became faster than the CPU implementation at larger resolutions, end-to-end execution remained slower due to data transfer, allocation, and multiple-kernel execution overheads.
+- Shared-memory optimization improved the Sobel kernel performance in the T4 experiments.
+- The supplementary CNN experiment demonstrated GPU execution for a deep learning workload.
+- Docker-based validation confirmed successful execution and correctness of the image-processing workloads on a second GPU environment.
+
 ## Repository Structure
 
 ```text
@@ -249,6 +253,10 @@ cloud-gpu-image-benchmarking/
 └── results/
     ├── figures/
     │
+    ├── final_report/
+    │   ├── Final_Report.pdf
+    │   └── [Combined result images]
+    │
     └── docker-gtx1080/
         ├── correctness-results.md
         └── validation-summary.csv
@@ -258,13 +266,14 @@ cloud-gpu-image-benchmarking/
 
 - **GPU Workload Implementations:** CPU and CUDA-based implementations of Sobel edge detection, Gaussian blur, and histogram equalization.
 - **Machine Learning Application:** CNN implementation and evaluation using the CIFAR-10 dataset.
-- **Experimental Notebooks:** Self-contained Jupyter notebooks containing implementations, performance experiments, correctness checks, and visualizations.
+- **Experimental Notebooks:** Jupyter notebooks containing implementations, performance experiments, correctness checks, and visualizations.
 - **Performance Analysis:** Comparative evaluation of CPU and GPU execution times, speedups, memory transfers, and thread-block configurations.
 - **Resource Profiling:** GPU utilization, memory consumption, and power measurements.
 - **Visual Analytics:** Graphs illustrating workload performance and resource utilization.
 - **Docker Validation:** Containerized execution and cross-GPU correctness validation using an NVIDIA GTX 1080.
 - **Deployment Documentation:** Cloud execution, Docker configuration, GPU passthrough, and reproducibility instructions.
-- **Academic Report:** A technical report documenting the methodology, experimental findings, limitations, and conclusions.
+- **Academic Report:** Final technical report documenting the methodology, experimental findings, limitations, and conclusions, available in `results/final_report/Final_Report.pdf`.
+- **Combined Result Images:** Consolidated visualizations of the experimental results, available in `results/final_report/`.
 
 ## Deployment and Reproducibility
 
@@ -283,17 +292,10 @@ The Docker configuration is maintained in [`docker/Dockerfile`](docker/Dockerfil
 ## Research and References
 
 1. Kirk, D. B., Hwu, W. W., & El Hajj, I. *Programming Massively Parallel Processors: A Hands-on Approach.* Morgan Kaufmann.
-
 2. NVIDIA Corporation. *CUDA C++ Best Practices Guide.*
-
 3. Paszke, A., et al. (2019). *PyTorch: An Imperative Style, High-Performance Deep Learning Library.* Advances in Neural Information Processing Systems.
-
 4. Harris, M. (2007). *Optimizing Parallel Reduction in CUDA.* NVIDIA Developer Technology.
-
 5. NVIDIA Corporation. *CUDA C++ Programming Guide.*
-
 6. Numba Development Team. *Numba Documentation: CUDA Support.* https://numba.readthedocs.io/
-
 7. Gonzalez, R. C., & Woods, R. E. *Digital Image Processing.* Pearson.
-
 8. Szeliski, R. *Computer Vision: Algorithms and Applications.* Springer.
