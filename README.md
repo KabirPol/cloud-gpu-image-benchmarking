@@ -142,7 +142,7 @@ An additional validation environment was configured using Docker Desktop on a Wi
 | GPU Programming | Numba CUDA |
 | Numerical Computing | NumPy |
 
-Docker GPU passthrough was verified successfully using NVIDIA's container runtime support. The GTX 1080 was detected inside the container, and CUDA availability was confirmed through Numba.
+Docker GPU passthrough was verified successfully. The GTX 1080 was detected inside the container, and CUDA availability was confirmed through Numba.
 
 The Docker environment was used for additional correctness validation of all three image-processing workloads and preliminary timing observations. It was not intended to replace the primary Colab benchmarking environment.
 
@@ -217,8 +217,8 @@ The Colab T4 environment is used for the main performance, scalability, optimiza
 ### Key Performance Findings
 
 - Sobel edge detection and Gaussian blur demonstrated substantial end-to-end GPU acceleration at larger image resolutions.
-- Gaussian blur achieved an end-to-end speedup of approximately 26.15× at 2048 × 2048.
-- Sobel edge detection achieved an end-to-end speedup of approximately 10.18× at 2048 × 2048.
+- Gaussian blur achieved an end-to-end speedup of approximately **26.15×** at 2048 × 2048.
+- Sobel edge detection achieved an end-to-end speedup of approximately **10.18×** at 2048 × 2048.
 - Histogram equalization showed a different performance pattern. Although its GPU kernel became faster than the CPU implementation at larger resolutions, end-to-end execution remained slower due to data transfer, allocation, and multiple-kernel execution overheads.
 - Shared-memory optimization improved the Sobel kernel performance in the T4 experiments.
 - The supplementary CNN experiment demonstrated GPU execution for a deep learning workload.
@@ -251,11 +251,37 @@ cloud-gpu-image-benchmarking/
 │   └── gpu_ml_application.ipynb
 │
 └── results/
+    │
     ├── figures/
+    │   │
+    │   ├── sobel_real_image_comparison.png
+    │   ├── sobel_cpu_vs_gpu_kernel.png
+    │   ├── sobel_cpu_vs_gpu_end_to_end.png
+    │   ├── sobel_gpu_speedup_comparison.png
+    │   ├── sobel_gpu_utilization_monitoring.png
+    │   ├── sobel_gpu_memory_monitoring.png
+    │   │
+    │   ├── gaussian_real_image_comparison.png
+    │   ├── gaussian_cpu_vs_gpu_kernel.png
+    │   ├── gaussian_cpu_vs_gpu_end_to_end.png
+    │   ├── gaussian_speedup_comparison.png
+    │   ├── gaussian_gpu_utilization_monitoring.png
+    │   ├── gaussian_gpu_memory_monitoring.png
+    │   │
+    │   ├── histogram_equalization_real_image_comparison.png
+    │   ├── histogram_equalization_histograms.png
+    │   ├── histogram_equalization_cpu_vs_gpu_kernel.png
+    │   ├── histogram_equalization_cpu_vs_gpu_end_to_end.png
+    │   ├── histogram_equalization_gpu_speedup_comparison.png
+    │   ├── histogram_equalization_gpu_utilization.png
+    │   └── histogram_equalization_gpu_memory.png
     │
     ├── final_report/
     │   ├── Final_Report.pdf
-    │   └── [Combined result images]
+    │   ├── combined_kernel_execution.png
+    │   ├── combined_end_to_end_execution.png
+    │   ├── combined_speedup_comparison.png
+    │   └── combined_gpu_resources.png
     │
     └── docker-gtx1080/
         ├── correctness-results.md
@@ -269,11 +295,11 @@ cloud-gpu-image-benchmarking/
 - **Experimental Notebooks:** Jupyter notebooks containing implementations, performance experiments, correctness checks, and visualizations.
 - **Performance Analysis:** Comparative evaluation of CPU and GPU execution times, speedups, memory transfers, and thread-block configurations.
 - **Resource Profiling:** GPU utilization, memory consumption, and power measurements.
-- **Visual Analytics:** Graphs illustrating workload performance and resource utilization.
+- **Visual Analytics:** 21 individual workload visualizations and four combined performance and resource-utilization figures.
 - **Docker Validation:** Containerized execution and cross-GPU correctness validation using an NVIDIA GTX 1080.
 - **Deployment Documentation:** Cloud execution, Docker configuration, GPU passthrough, and reproducibility instructions.
-- **Academic Report:** Final technical report documenting the methodology, experimental findings, limitations, and conclusions, available in `results/final_report/Final_Report.pdf`.
-- **Combined Result Images:** Consolidated visualizations of the experimental results, available in `results/final_report/`.
+- **Academic Report:** Final technical report documenting the methodology, experimental findings, limitations, and conclusions, available at `results/final_report/Final_Report.pdf`.
+- **Combined Result Images:** Consolidated performance and resource-utilization visualizations available in `results/final_report/`.
 
 ## Deployment and Reproducibility
 
@@ -291,11 +317,12 @@ The Docker configuration is maintained in [`docker/Dockerfile`](docker/Dockerfil
 
 ## Research and References
 
-1. Kirk, D. B., Hwu, W. W., & El Hajj, I. *Programming Massively Parallel Processors: A Hands-on Approach.* Morgan Kaufmann.
-2. NVIDIA Corporation. *CUDA C++ Best Practices Guide.*
-3. Paszke, A., et al. (2019). *PyTorch: An Imperative Style, High-Performance Deep Learning Library.* Advances in Neural Information Processing Systems.
-4. Harris, M. (2007). *Optimizing Parallel Reduction in CUDA.* NVIDIA Developer Technology.
-5. NVIDIA Corporation. *CUDA C++ Programming Guide.*
-6. Numba Development Team. *Numba Documentation: CUDA Support.* https://numba.readthedocs.io/
-7. Gonzalez, R. C., & Woods, R. E. *Digital Image Processing.* Pearson.
-8. Szeliski, R. *Computer Vision: Algorithms and Applications.* Springer.
+1. Owens, J. D., et al. (2008). GPU computing. *Proceedings of the IEEE*. https://doi.org/10.1109/JPROC.2008.917757
+2. Collins, et al. (2025). GPU-accelerated cloud computing services and performance evaluation. *Simulation Modelling Practice and Theory*. https://doi.org/10.1016/j.simpat.2025.103181
+3. Hangün, B., and Eyecioğlu, Ö. (2017). Performance comparison between OpenCV built-in CPU and GPU functions on image processing operations. *International Journal of Engineering Science and Application*, 1(2), 34–41.
+4. Saha, et al. (2016). Implementation of image enhancement algorithms and recursive ray tracing using CUDA. *Procedia Computer Science*. https://doi.org/10.1016/j.procs.2016.03.066
+5. Xu, et al. (2022). Influence of data amount, data type and implementation packages in GPU coding. *Array*. https://doi.org/10.1016/j.array.2022.100261
+6. Zheng, et al. (2026). Scaling computer vision: A comparative analysis of cloud infrastructures for AI-based image processing and classification applications. *Electronics*, 15(9), 1953. https://doi.org/10.3390/electronics15091953
+7. Dancheva, et al. (2024). Cloud benchmarking and performance analysis of an HPC application in Amazon EC2. *Cluster Computing*. https://doi.org/10.1007/s10586-023-04060-4
+8. Belkhiri, and Dagenais (2024). Analyzing GPU performance in virtualized environments: A case study. *Future Internet*, 16(3), 72. https://doi.org/10.3390/fi16030072
+9. NVIDIA Corporation. *CUDA C++ Best Practices Guide*. https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/
